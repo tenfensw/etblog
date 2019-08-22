@@ -32,7 +32,7 @@ class String
 end
 
 class ETBlogCore
-	def initialize(folder)
+	def initialize(folder, static_custom=nil)
 		if not File.directory? folder then
 			raise 'No such directory - ' + folder
 		end
@@ -49,6 +49,9 @@ class ETBlogCore
 		@title = plist_parsed['Title']
 		@author = plist_parsed['Author']
 		@static = @base + '/' + plist_parsed['Static'].to_s
+		if static_custom != nil then
+			@static = static_custom.clone
+		end
 		@description = plist_parsed['Description'] || 'Your new ETBlog blog.'
 		@description += '<br><p>Powered by <a href="http://timkoi.gitlab.io/etblog">ETBlog</a>.</p>'
 		if not File.directory? @static then
@@ -64,6 +67,28 @@ class ETBlogCore
 			@links.push("<li><a href=\"http://timkoi.gitlab.io/etblog\">ETBlog homepage</a></li>")
 			@links.push("<li><a href=\"http://github.com/timkoi\">@timkoi on GitHub</a></li>")
 		end
+	end
+	
+	def findimages(string)
+		possible_image = false
+		inside_image_tag = false
+		img = ''
+		out = []
+		string.split('').each do |item|
+			if item == '!' then
+				possible_image = true
+			elsif item == '(' && possible_image then
+				possible_image = false
+				inside_image_tag = true
+			elsif item == ')' && inside_image_tag then
+				inside_image_tag = false
+				out.push(img.clone)
+				img = ''
+			elsif inside_image_tag then
+				img += item
+			end
+		end
+		return out
 	end
 	
 	def conv(string, put_ctnt)
@@ -90,6 +115,12 @@ class ETBlogCore
 			FileUtils.cp(@base + '/index.html', output)
 			ctnt = File.read(output)
 			put_ctnt = File.read(item)
+			all_images = self.findimages(put_ctnt)
+			all_images.each do |item|
+				if File.exists? @base + '/' + item then
+					FileUtils.cp(@base + '/' + item, File.dirname(output) + '/' + item)
+				end
+			end
 			heading = Kramdown::Document.new(put_ctnt.gsub("\r\n", "\n").split("\n")[0]).to_html.unxml
 			all_posts_headings.push(heading)
 			put_ctnt = "<p><a href=\"../../index.html\">< Back to the homepage</a></p><br>" + Kramdown::Document.new(put_ctnt).to_html

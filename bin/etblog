@@ -1,5 +1,8 @@
 #!/usr/bin/env ruby
 require 'etblog'
+require 'fileutils'
+require 'socket'
+require 'uri'
 
 action = ARGV[0] || 'help'
 if ['-help', '--help', '-h', '-?', 'help'].include? action then
@@ -27,9 +30,48 @@ if action == 'init' then
 	puts ""
 	puts "Have a great time using ETBlog!"
 elsif action == 'build' || action == 'make' then
+	ETBlogCore.new(Dir.pwd).build
+	puts "Done!"
+elsif action == 'serve' || action == 'server' || action == 'demo' then
 	if not File.exists? Dir.pwd + '/blog.plist' then
 		raise "There is no blog in #{Dir.pwd} - blog.plist does not exist. Try running \"#{$0} init\" first?"
 	end
-	ETBlogCore.new(Dir.pwd).build
-	puts "Done!"
+	temp_dir = "/tmp/etblogdemo#{rand(9999)}"
+	if ENV['OS'] == 'Windows_NT' then
+		temp_dir = Dir.pwd + '/' + File.dirname(test_dir)
+	end
+	if File.directory? temp_dir then
+		FileUtils.rm_rf(temp_dir)
+	end
+	port = ARGV[1] || 8080
+	if String === port then
+		port = port.to_i
+	end
+	puts "Running on port #{port}..."
+	server = TCPServer.new('0.0.0.0', port)
+	loop do
+		socket = server.accept
+		ETBlogCore.new(Dir.pwd, temp_dir).build
+		path = temp_dir + '/' + socket.gets.split(' ')[1]
+		if File.directory? path then
+			path += '/index.html'
+		end
+		if not File.exists? path then
+			socket.print "HTTP/1.1 404 Not Found\r\n"
+			socket.print "Content-Type: text/plain\r\n"
+			socket.print "Connection: close\r\n\r\n"
+			socket.print "NOT FOUND"
+		else
+			socket.print "HTTP/1.1 200 OK\r\n"
+			socket.print "Content-Type: text/html\r\n"
+			socket.print "Connection: close\r\n\r\n"
+			socket.print File.read(path)
+		end
+		socket.close
+		FileUtils.rm_rf(temp_dir)
+	end
+else
+	raise "Unknown action - \"#{action}\"."
 end
+
+exit 0
