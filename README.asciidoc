@@ -97,3 +97,13 @@ static/
 
 Now open the `static/index.html` file to see your blog and then (if you like it) publish it to your server and enjoy!
 
+== Creating custom themes
+Basically, a theme is a single HTML page with external dependencies only that contains these tags that are later substituted by the ETBlog preprocessor:
+[squares]
+- `@{post}` - mandatory tag. Will be substituted with the title and the contents of the post. If you are building a Bootstrap-based ETBlog theme, put this tag inside `<div class="container">`.
+- `@{title}` - mandatory tag. Will be substituted with the name of the blog. If you are building a Bootstrap-based theme, put it in the navbar.
+- `@{description}` - optional tag. Will be substituted with the description of the blog.
+- `@{links}` - optional tag. Will be substituted with the links specified in `blog.plist`. If you are building a Bootstrap-based theme, put it in the navbar.
+- `@{author}` - optional tag that can be put anywhere on the page. Will be substituted with the blog author name.
+- `@{year}` - optional tag that can be put anywhere on the page. Will be substituted with the current year.
+
