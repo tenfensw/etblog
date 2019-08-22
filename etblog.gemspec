@@ -1,6 +1,6 @@
 Gem::Specification.new do |gspec|
 	gspec.name = "etblog"
-	gspec.version = "0.1.1"
+	gspec.version = "0.1.2"
 	gspec.authors = [ "Tim K" ]
 	gspec.date = "2019-08-22"
 	gspec.description = "A really tiny static blog generator written in Ruby."
@@ -11,4 +11,6 @@ Gem::Specification.new do |gspec|
 	gspec.has_rdoc = false
 	gspec.homepage = "http://timkoi.gitlab.io/etblog"
 	gspec.summary = gspec.description.clone
+	gspec.add_runtime_dependency('kramdown')
+	gspec.add_runtime_dependency('plist')
 end
