@@ -1,6 +1,13 @@
 = ETBlog (Extremely Tiny Static Blog Generator)
 *ETBlog* is a yet another static blog generator written in Ruby that tries to be as lightweight as possibile.
 
+== Installation (using RubyGems)
+[source,bash]
+----
+$ sudo gem install etblog -N
+----
+That's it!
+
 == Installation (from sources)
 First, you will obviously need Ruby 2.1 or newer.
 
