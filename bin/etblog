@@ -26,7 +26,7 @@ if action == 'init' then
 	puts "       #{$0} build"
 	puts ""
 	puts " - Add a new theme. By default, the theme that comes with ETBlog looks really old-fashioned. Try adapting an existing Bootstrap or UIKit theme. Notice that a theme cannot contain any internal JavaScript or CSS dependencies - it can only use extenal libraries and JS, such as Bootstrap from CDNJS. After you are finished with the theme, save it to \"index.html\". And yes, you should definetly check out this guide on creating themes: http://timkoi.gitlab.io/etblog/newtheme"
-	puts " - Build your blog. The resulting blog files with be placed into \"htdocs\". Copy over that folder onto GitLab Pages or your web server and enjoy your new blog!"
+	puts " - Build your blog. The resulting blog files with be placed into \"static\". Copy over that folder onto GitLab Pages or your web server and enjoy your new blog!"
 	puts ""
 	puts "Have a great time using ETBlog!"
 elsif action == 'build' || action == 'make' then

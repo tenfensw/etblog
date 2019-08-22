@@ -104,6 +104,4 @@ Basically, a theme is a single HTML page with external dependencies only that co
 - `@{title}` - mandatory tag. Will be substituted with the name of the blog. If you are building a Bootstrap-based theme, put it in the navbar.
 - `@{description}` - optional tag. Will be substituted with the description of the blog.
 - `@{links}` - optional tag. Will be substituted with the links specified in `blog.plist`. If you are building a Bootstrap-based theme, put it in the navbar.
-- `@{author}` - optional tag that can be put anywhere on the page. Will be substituted with the blog author name.
-- `@{year}` - optional tag that can be put anywhere on the page. Will be substituted with the current year.
 
