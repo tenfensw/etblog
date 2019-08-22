@@ -1,0 +1,99 @@
+= ETBlog (Extremely Tiny Static Blog Generator)
+*ETBlog* is a yet another static blog generator written in Ruby that tries to be as lightweight as possibile.
+
+== Installation (from sources)
+First, you will obviously need Ruby 2.1 or newer.
+
+You will need to install Kramdown and plist first:
+[source,bash]
+----
+$ sudo gem install kramdown plist -N
+----
+
+Then build and install this gem:
+[source,bash]
+----
+$ gem build etblog.gemspec
+$ sudo gem install --local ./etblog-0.1.1.gem -N
+----
+
+== Creating a blog
+Basically, you need to use the `etblog` command-line utility to create and build blogs.
+
+First, create a directory for your blog:
+[source,bash]
+----
+$ mkdir myblog
+$ cd myblog
+----
+
+Now run `etblog init` to initialize the blog:
+[source,bash]
+----
+$ etblog init
+----
+
+After that, you should get this directory tree:
+
+[source]
+----
+.
+├── blog.plist
+└── static
+
+----
+
+The `blog.plist` file is the configuration file of your blog. There, you can specify:
+[squares]
+- Your name and the name of your blog
+- The description of your blog
+- Links to various posts and sites that the user will see on the sidebar
+
+Open it in your favorite text editor and change the name of your blog, specify your real name and change the description.
+
+If you would like to change the folder where the compiled HTML files should be placed, change the `Static` option too.
+
+Adding links is pretty easy. As the key, you specify the title of the link and as the value, you specify the href location of the link. Example (add this after `<dict>`):
+[source,xml]
+----
+<key>Tim K's website</key>
+<string>http://timkoi.gitlab.io</string
+----
+
+After that, save the plist file and add some blog posts.
+
+Adding blog posts is pretty easy too. You just create a markdown file with the `post-` prefix and write your blog in pure markdown. No need to specify the date or anything like that manually!
+
+For example, let's create a hello world post. The file name of our post should be `post-helloworld.md`. We just create that file near the `blog.plist` file and add some contents into it:
+[source,bash]
+----
+$ touch post-helloworld.md
+$ nano post-helloworld.md
+----
+
+Example contents:
+[source]
+----
+# Hello world
+This is my first blog post on my ETBlog-based blog.
+----
+
+Now compile the blog:
+[source,bash]
+----
+$ etblog build
+----
+
+In the `static` folder (if you did not change the value of the `Static` key in the plist file), you should find:
+
+[source]
+----
+static/
+├── index.html
+└── posts
+    └── post-helloworld.md
+        └── index.html
+----
+
+Now open the `static/index.html` file to see your blog and then (if you like it) publish it to your server and enjoy!
+

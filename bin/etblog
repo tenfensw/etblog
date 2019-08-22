@@ -1,0 +1,35 @@
+#!/usr/bin/env ruby
+require 'etblog'
+
+action = ARGV[0] || 'help'
+if ['-help', '--help', '-h', '-?', 'help'].include? action then
+	puts "Usage: #{$0} init   # creates a new blog in PWD"
+	puts "       #{$0} build  # compiles the blog into HTML files"
+	puts "       #{$0} serve  # starts a web server with the blog"
+	puts "       #{$0} help   # shows this help message"
+	exit 1
+end
+
+if action == 'init' then
+	ETBlogCore.new(Dir.pwd)
+	puts "Created a new ETBlog blog in #{Dir.pwd}."
+	puts ""
+	puts "What to do next?"
+	puts " - Add some blog posts. It's simple. Just create a Markdown file with the prefix \"post-\" prepended before the actual filename, open it in your favorite editor and start editing. No need to specify the date or front matters."
+	puts "   Example for macOS and Linux users:"
+	puts "       touch post-hello.md"
+	puts "       echo \"# Hello world\" > post-hello.md"
+	puts "       echo \"Look how cool my new blog is\" >> post-hello.md"
+	puts "       #{$0} build"
+	puts ""
+	puts " - Add a new theme. By default, the theme that comes with ETBlog looks really old-fashioned. Try adapting an existing Bootstrap or UIKit theme. Notice that a theme cannot contain any internal JavaScript or CSS dependencies - it can only use extenal libraries and JS, such as Bootstrap from CDNJS. After you are finished with the theme, save it to \"index.html\". And yes, you should definetly check out this guide on creating themes: http://timkoi.gitlab.io/etblog/newtheme"
+	puts " - Build your blog. The resulting blog files with be placed into \"htdocs\". Copy over that folder onto GitLab Pages or your web server and enjoy your new blog!"
+	puts ""
+	puts "Have a great time using ETBlog!"
+elsif action == 'build' || action == 'make' then
+	if not File.exists? Dir.pwd + '/blog.plist' then
+		raise "There is no blog in #{Dir.pwd} - blog.plist does not exist. Try running \"#{$0} init\" first?"
+	end
+	ETBlogCore.new(Dir.pwd).build
+	puts "Done!"
+end
